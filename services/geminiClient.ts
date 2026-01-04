@@ -16,8 +16,16 @@ export const searchManga = async (description: string, page: number = 1): Promis
   return data.recommendations || [];
 };
 
-// Helper to parse Gemini text into structured recommendations (kept for client-side parsing if needed)
-export const parseTextToRecommendations = (text: string): Recommendation[] => {
+// (client keeps parsing helpers in case we need to parse text locally in future)
+const extractValue = (block: string, key: string): string => {
+  const lines = block.split('\n');
+  const line = lines.find(l => l.trim().startsWith(key));
+  if (!line) return "";
+  const value = line.substring(line.indexOf(key) + key.length).trim();
+  return value;
+};
+
+const parseGeminiResponse = (text: string): Recommendation[] => {
   const blocks = text.split(/---\n?/).filter(b => b.trim().length > 20);
   return blocks.map((block, index) => {
     const title = extractValue(block, "TITLE:");
@@ -54,10 +62,4 @@ export const parseTextToRecommendations = (text: string): Recommendation[] => {
   });
 };
 
-const extractValue = (block: string, key: string): string => {
-  const lines = block.split('\n');
-  const line = lines.find(l => l.trim().startsWith(key));
-  if (!line) return "";
-  const value = line.substring(line.indexOf(key) + key.length).trim();
-  return value;
-};
+export const parseTextToRecommendations = parseGeminiResponse;

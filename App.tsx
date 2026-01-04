@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import MangaCard from './components/MangaCard';
 import SkeletonLoader from './components/SkeletonLoader';
-import { searchManga } from './services/geminiService';
+import { searchManga } from './services/geminiClient';
 import { Recommendation, SearchState } from './types';
 
 const App: React.FC = () => {
